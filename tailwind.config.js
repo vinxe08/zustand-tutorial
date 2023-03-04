@@ -7,6 +7,15 @@ module.exports = {
    // These paths are just examples, customize them to match your project structure
   theme: {
     extend: {},
+    fontFamily: {
+      roboto:['Oswald', 'sans-serif']
+    }
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')({ nocompatible: true }),
+    require('tailwind-scrollbar-hide'),
+  ],
+  variants: {
+    scrollbar: ['rounded'],
+  }
 }

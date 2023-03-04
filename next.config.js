@@ -6,7 +6,8 @@ const nextConfig = {
 
 module.exports = {
   images: {
-    domains: ['fakestoreapi.com'],
+    domains: ['fakestoreapi.com', "image.tmdb.org"],
+
   },
 }
 
