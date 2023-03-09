@@ -12,7 +12,9 @@ function RowList({movies, title, category}: Movies) {
   return (
     <>
       <div className='row__container flex-shrink-0'>
-        <h1 className='absolute text-red-500 text-5xl font-bold z-10 top-4 left-9 cursor-default'>{title}</h1>
+        <h1 className='absolute text-red-500 text-5xl font-bold z-10 top-4 left-9 cursor-default'>
+          {title}
+        </h1>
         {movies.map((movie) => (
           <Row key={movie.id} movie={movie} category={category}/>
         ))}

@@ -8,6 +8,7 @@ import RowList from '../components/RowList'
 import { useEffect, useState } from 'react'
 import Loading from '../components/Loading'
 import CategoryMenu from '../components/CategoryMenu'
+import MovieList from '../components/MovieList'
 
 type Category = {
   category: string
@@ -30,6 +31,7 @@ const Home = ({ trendingNow, originals, topRated, actionMovies, comedy, horror, 
   },[])
 
   const handleSelectMovie = (categoryID: number) => {
+
     return categoryID === 1 
     ? setCategoryMovie({ category: "originals", title: "Originals", movies: originals })
     : categoryID === 2 ? setCategoryMovie({ category: "top", title: "Top Rated", movies: topRated })
@@ -50,9 +52,12 @@ const Home = ({ trendingNow, originals, topRated, actionMovies, comedy, horror, 
       <div className='flex flex-col'>
         {bannerMovie ? <Banner  movie={bannerMovie}/>: <Loading />}
         
-        <CategoryMenu handleSelectMovie={handleSelectMovie} />
+        {/* <CategoryMenu handleSelectMovie={handleSelectMovie} /> */}
 
-        {categoryMovie ? <RowList movies={categoryMovie.movies} title={categoryMovie.title} category={categoryMovie.category} /> : <h1>Loading...</h1>}
+        {/* {categoryMovie ? <RowList movies={categoryMovie.movies} title={categoryMovie.title} category={categoryMovie.category} /> : <h1>Loading...</h1>} */}
+
+
+        {categoryMovie ? <MovieList movies={categoryMovie.movies} title={categoryMovie.title} category={categoryMovie.category} handleSelectMovie={handleSelectMovie} /> : <h1>Loading...</h1> }
 
       </div>
     </div>

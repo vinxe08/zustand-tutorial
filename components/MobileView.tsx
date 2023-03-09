@@ -17,7 +17,7 @@ type Props = {
 
 const sentence = {
   hidden: {opacity: 0},
-  visible: (i =1) => ({
+  visible: (i = 1) => ({
     opacity: 1,
     transition: {
       delayChildren: 0.04 * i,
@@ -42,9 +42,7 @@ const letter = {
       type: "spring",
       damping: 12,
       stiffness: 100
-    }
-  },
-  
+  }},
 }
 
 function MobileView({movie, handleOnPlay}: Props) {

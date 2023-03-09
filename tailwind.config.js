@@ -8,7 +8,8 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      roboto:['Oswald', 'sans-serif']
+      roboto:['Oswald', 'sans-serif'],
+      golos: ['Golos Text', 'sans-serif'],
     }
   },
   plugins: [

@@ -57,7 +57,7 @@ function GetMovies({currentMovie, handleOnPlay}:Props ) {
           url={`https://www.youtube.com/watch?v=${trailer}`}
           width="100%"
           height="100%"
-          style={{ position: 'absolute', top: '0', left: '0' }}
+          style={{ position: 'fixed', top: '0', left: '0' }}
           playing
         />
     </div>

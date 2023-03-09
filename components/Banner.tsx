@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Movie } from '../interface/Products'
 import { AnimatePresence, motion } from "framer-motion"
 import { useMediaQuery } from 'react-responsive'
-import { ArrowTopRightOnSquareIcon, Bars3Icon, PlayIcon } from '@heroicons/react/24/solid'
-import { PlayIcon as PlayOutlineIcon, PlayCircleIcon, HeartIcon, StarIcon, UserGroupIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon } from '@heroicons/react/24/solid'
+import { PlayCircleIcon, HeartIcon, StarIcon, UserGroupIcon, PlusCircleIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 import { truncate } from '../utils/truncate'
 import { base_url } from '../utils/requests'
 import Link from 'next/link'
@@ -53,8 +53,7 @@ const Banner: React.FC<Props> = ({movie}) => {
       {/* OVERLAY */}
       <div className='flex h-screen w-screen bg-gradient-to-b from-transparent via-transparent to-[#17253a] -z-10 absolute bottom-0' />
 
-      {/* MINI CARD */}
-  
+      {/* Small Size */}
       <AnimatePresence>
       { smQuery ? <motion.div 
         // {...animation}
@@ -63,24 +62,36 @@ const Banner: React.FC<Props> = ({movie}) => {
         exit={{ opacity: 0, scale: 0.5 }}
         className='h-[30rem] w-screen flex flex-col items-start justify-end space-y-4 p-10 self-end'
         >
-          <div className='text-white text-xl font-semibold flex items-center space-x-5 tracking-widest'>
-            <h1 className='tracking-wider text-gray-900 p-2 bg-gradient-to-tl from-[#fa70ff] via-[#e1eff3] to-[#52d7ff] rounded-sm font-bold'>{movie.first_air_date || movie.release_date}</h1>
-            <h1 className='text-4xl'>🚀</h1>
-            <h1 className='uppercase font-bold text-4xl'>{movie.media_type}</h1>
+          <div className={`flex items-center justify-center space-x-2 absolute ${movie.media_type === "movie" ? "bottom-[7.9rem] left-[-73px]" : "bottom-[6.8rem] left-[-55px]"} rotate-[270deg]`}>
+            <div className='bg-[#ffffff8f] h-[2px] w-14 rounded-full'/>
+            <h1 className='font-golos tracking-wide text-gray-300 text-lg uppercase'>{movie.media_type}</h1>
+            <h1 className='bg-[#ffffff8f] h-[2px] w-14 rounded-full'/>
           </div>
 
-          <h1 className='font-roboto mb-10 text-6xl text-gray-100'>
-            {truncate(movie?.title || movie?.name, 30 )}
-          </h1>
-          <Link href={`/trending/${movie.id}`}>
-            <div className='cursor-pointer transition ease-in-out flex items-center space-x-2  text-white bg-[#d84949c0] rounded-sm p-2 hover:scale-105 hover:bg-[#f74040]'>
-              <PlayIcon className="h-10 w-10 "/>
-              {/* <h1 className='text-xl font-bold tracking-widest'>Watch Trailer</h1> */}
-            </div>
-          </Link>
-      </motion.div> : null }
+          <h1 className='font-roboto text-white text-6xl uppercase'>{movie.title || movie.name}</h1>
 
-      {/* Large */}
+          <p className='text-gray-300 font-golos text-xs'>{truncate(movie.overview, 250)}</p>
+
+          <div className='flex w-full items-center space-x-5'>
+            <h1 className='text-gray-200 font-roboto flex-1'>{movie.first_air_date || movie.release_date}</h1>
+
+            <div 
+              onClick={handleOnPlay}
+              className='flex items-center cursor-pointer outline outline-1 text-gray-200 outline-gray-400 rounded-full p-1 px-[6px] space-x-2 hover:bg-blue-600 hover:outline-none hover:scale-110 active:scale-90 transition ease-in-out'>
+              <PlayCircleIcon className='h-5 w-5 '/>
+              <button className='text-sm '>Watch trailer</button>
+            </div>
+
+            <Link href={`/trending/${movie.id}`}>
+              <div className='flex items-center cursor-pointer text-gray-200 bg-red-400 rounded-full p-1 px-4 space-x-2 hover:scale-125 hover:bg-red-500 active:scale-90 transition ease-in-out '>
+                <button className='text-sm font-golos'>View</button>
+              </div>
+            </Link>
+          </div>
+      </motion.div> 
+      : null }
+
+      {/* Large Size */}
       {mdQuery ?
         <motion.div 
           initial={{ opacity: 0, scale: 0.5 }}
@@ -103,9 +114,12 @@ const Banner: React.FC<Props> = ({movie}) => {
               <PlusCircleIcon className="h-7 w-7 text-[#49ff9b]"/>
               <h1 className='font-semibold text-sm '>Add to favorites</h1>
             </div>
-            <div className='flex-grow flex justify-end cursor-pointer overflow-hidden p-2'>
-              <Bars3Icon className="h-20 w-20 text-white hover:scale-150 hover:text-[#82edf5] transition ease-in-out rounded-full "/>
-            </div>
+
+            <Link href={`/trending/${movie.id}`}>
+              <div className='flex-grow flex justify-end cursor-pointer overflow-hidden p-4'>
+                <button className='text-gray-300 font-roboto tracking-widest text-xl border p-2 px-6 rounded-full hover:text-white hover:scale-125 hover:bg-blue-500 hover:border-transparent transition ease-in-out active:scale-90'>View</button>
+              </div>
+            </Link>
           </div>
 
           <div className='bg-[#c2bfbf34] h-1 w-full rounded-lg'/>
