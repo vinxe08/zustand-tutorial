@@ -1,12 +1,12 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { Movie } from '../interface/Products'
-import { dateManipulation } from '../utils/dateManipulation'
-import { base_url } from '../utils/requests'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import Loading from './Loading'
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import NavButton from './NavButton'
+import { container, letter, sentence } from './AnimationVariant'
+import MovieCard from './MovieCard'
 
 type Movies = {
   movies: Movie[],
@@ -15,63 +15,14 @@ type Movies = {
   handleSelectMovie: (categoryID: number) => void
 }
 
-const sentence = {
-  hidden: (i = 1) => ({
-    opacity: 0,
-    y: -80,
-    x: 50,
-    scale: 0,
-    transition: {
-      delayChildren: 0.04 * i,
-      staggerChildren: 0.12,
-      delay:1
-    }
-  }),
-  visible: (i = 1) => ({
-    opacity: 1,
-    y: 0,
-    x: 0,
-    scale: 1,
-    transition: {
-      delayChildren: 0.04 * i,
-      staggerChildren: 0.12,
-    }
-  })
-} 
-
-const letter = {
-  hidden: {
-    opacity: 0, 
-    y: -200, 
-    transition: {
-    type: "spring",
-    damping: 12,
-    stiffness: 100
-  }},
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      damping: 12,
-      stiffness: 100
-  }},
-}
-
 function MovieList({movies, title, category, handleSelectMovie}: Movies) {
   const [active, setActive] = useState<string>("Trending")
   const [showOthers, setShowOthers] = useState(false)
 
   // 
   const selectCategory = ( movieCategory: string, categoryID: number) => {
-    let timer:any;
     setActive(movieCategory) // For active className
-
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      handleSelectMovie(categoryID)
-    }, 1000)
-    
+    handleSelectMovie(categoryID)
   }
 
   console.log("LOGS")
@@ -79,52 +30,29 @@ function MovieList({movies, title, category, handleSelectMovie}: Movies) {
   if(!movies) return <Loading />
 
   return (
-    <div className='text-white bg-gray-900 flex flex-col w-full space-y-10'>
-      <div className='flex w-full p-6 pb-2'>
+    <div className='text-white bg-gray-900 flex flex-col w-full space-y-10 relative'>
+      {/* NAV BAR */}
+      <div className='flex w-full p-6 pb-2 sticky top-0 left-0 z-10 bg-gray-900'>
         <div className='flex items-center space-x-2 flex-1 mr-8'>
           <h1 className='bg-[#ffffff8f] h-[2px] w-10 rounded-full md:h-[4px] md:w-[4rem]'/>
           <h1 className='font-roboto tracking-wider md:text-2xl'>MOVIES</h1>
         </div>
         <div className='space-x-5 flex'>
-          <div className='relative'>
-            <button 
-              onClick={() => selectCategory("Trending", 1)}
-              className={`text-[13px] md:text-[17px] font-roboto tracking-widest ${active === "Trending" ? "text-blue-500" : "text-gray-400"} uppercase`}>
-              Trending
-            </button>
-            <motion.div 
-              animate={{ y: active === "Trending" ? 0 : 100, opacity: active === "Trending" ? 1: 0 }}
-              className={`h-[2px] ${active === "Trending" ? "bg-blue-500" : "bg-transparent"} w-10 absolute top-8 left-[13px] md:h-[3px] md:w-14`}/>
-          </div>
+          {/* TRENDING BUTTON */}
+          <NavButton active={active} navType='Trending' selectCategory={selectCategory} categoryID={1}/>
 
-          <div className='relative'>
-            <button 
-              onClick={() => selectCategory("Originals", 2)}
-              className={`text-[13px] md:text-[17px] font-roboto tracking-widest ${active === "Originals" ? "text-blue-500" : "text-gray-400"} uppercase`}>
-              Originals
-            </button>
-            <motion.div 
-              animate={{ y: active === "Originals" ? 0 : 100, opacity: active === "Originals" ? 1: 0 }}
-              className={`h-[2px] ${active === "Originals" ? "bg-blue-500" : "bg-transparent"} w-10 absolute top-8 left-[13px]`}/>
-          </div>
+          {/* ORIGINALS BUTTON */}
+          <NavButton active={active} navType='Originals' selectCategory={selectCategory} categoryID={2}/>
 
-          <div className='relative'>
-            <button 
-              onClick={() => selectCategory("Top Rated", 3)}
-              className={`text-[13px] md:text-[17px] font-roboto tracking-widest ${active === "Top Rated" ? "text-blue-500" : "text-gray-400"} uppercase`}>
-              Top Rated
-            </button>
-            <motion.div
-              animate={{ y: active === "Top Rated" ? 0 : 100, opacity: active === "Top Rated" ? 1: 0 }}
-              className={`h-[2px] ${active === "Top Rated" ? "bg-blue-500" : "bg-transparent"} w-10 absolute top-8 left-[13px]`}/>
-          </div>
-          
+          {/* TOP RATED BUTTON */}
+          <NavButton active={active} navType='Top Rated' selectCategory={selectCategory} categoryID={3}/>
+
         </div>
+        {/* OTHERS BUTTON */}
         <div className='flex-1 flex justify-end'>
           <button  
             onClick={() => setShowOthers(!showOthers)}
-            className='flex items-center border border-gray-400 md:border-2 rounded-full p-1 md:px-2 md:space-x-1 text-gray-400 cursor-pointer relative hover:text-white hover:border-white transition ease-in-out '>
-
+            className='othersButton'>
             <h1 className='text-[13px] md:text-[17px] font-roboto hidden md:flex tracking-widest'>OTHERS</h1>
             <ChevronDownIcon className={`h-4 w-4 transition ease-in-out duration-500 ${showOthers ? "rotate-[-180deg]" : "rotate-[0deg]"}`}/> 
 
@@ -138,7 +66,7 @@ function MovieList({movies, title, category, handleSelectMovie}: Movies) {
               className='absolute flex flex-col top-[30px] left-[-120px] md:left-[-60px] space-y-2 z-30 bg-gray-300 p-2 rounded-lg overflow-hidden'>
                 {["Action", "Comedy", "Horror", "Romance", "Documentaries"].map((title, index) => (
                   <motion.button 
-                    onClick={() => selectCategory(title, index + 3)}
+                    onClick={() => selectCategory(title, index + 4)}
                     variants={letter}
                     whileTap={{ scale: 0.8}}
                     key={index} 
@@ -150,29 +78,22 @@ function MovieList({movies, title, category, handleSelectMovie}: Movies) {
         </div>
       </div>
 
-      <div className='grid grid-cols-3 md:grid-cols-4 gap-5 lg:gap-6 xl:gap-14 pt-0 pb-6 px-6'>
-        { movies.map(movie => (
-          <Link  key={movie.id} href={`/${category}/${movie.id}`}>
-          <div className='flex flex-col text-center cursor-pointer hover:shadow-sm hover:shadow-gray-300 hover:scale-110 active:scale-90 transition ease-in-out space-y-2'>
-              <Image 
-                src={`${base_url}${movie.poster_path}`}
-                layout="responsive"
-                height={65}
-                width={50}
-                className="rounded-sm mb-2"
-              />
-            <h1 className='text-center font-roboto px-2 text-gray-200 text-sm md:text-base lg:text-xl tracking-wider'>{movie.name || movie.title}</h1>
-            <div className='w-full flex space-x-1 items-center justify-center text-gray-500 uppercase text-xs md:text-base lg:text-lg font-golos tracking-wide'>
-              <h1>{movie.media_type}</h1>
-              <span>|</span>
-              <h1>{movie.original_language.toUpperCase()}</h1>
-              <span>|</span>
-              <h1>{dateManipulation(movie.release_date || movie.first_air_date) || "🚀"}</h1>
-            </div>
-          </div>
-          </Link>
-        )) }
-      </div>
+      {/* CONTENT PAGE */}
+      <motion.div 
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className='grid grid-cols-3 md:grid-cols-4 gap-5 lg:gap-6 xl:gap-14 pt-0 pb-6 px-6'>
+        <LayoutGroup>
+          <AnimatePresence >
+          { movies.map(movie => (
+            <Link  key={movie.id} href={`/${category}/${movie.id}`}>
+              <MovieCard movie={movie}/>
+            </Link>
+          ))}
+        </AnimatePresence>
+        </LayoutGroup>
+      </motion.div>
     </div>
   )
 }

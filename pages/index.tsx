@@ -4,11 +4,13 @@ import { Movie, Result } from '../interface/Products'
 import axios from 'axios'
 import requests from '../utils/requests'
 import Banner from '../components/Banner'
-import RowList from '../components/RowList'
 import { useEffect, useState } from 'react'
 import Loading from '../components/Loading'
-import CategoryMenu from '../components/CategoryMenu'
 import MovieList from '../components/MovieList'
+import Lottie from 'lottie-react'
+import IntroLogo from '../public/296-react-logo.json'
+import { motion } from 'framer-motion'
+import Footer from '../components/Footer'
 
 type Category = {
   category: string
@@ -19,6 +21,13 @@ type Category = {
 const Home = ({ trendingNow, originals, topRated, actionMovies, comedy, horror, romance, documentaries }: Result) => {
   const [bannerMovie ,setBannerMovie] = useState<Movie>();
   const [categoryMovie, setCategoryMovie] = useState<Category>();
+  const [animateStart, setAnimateStart] = useState(true)
+
+  const introductionAnimation = () => {
+    setTimeout(() => {
+      setAnimateStart(false)
+    }, 4300)
+  }
 
   useEffect(() => {
     const index = Math.floor(Math.random() * trendingNow.length - 1)
@@ -28,6 +37,7 @@ const Home = ({ trendingNow, originals, topRated, actionMovies, comedy, horror, 
       title: "Trending Now", 
       movies: trendingNow
     })
+    introductionAnimation()
   },[])
 
   const handleSelectMovie = (categoryID: number) => {
@@ -42,6 +52,26 @@ const Home = ({ trendingNow, originals, topRated, actionMovies, comedy, horror, 
     : categoryID === 7 ? setCategoryMovie({ category: "documentaries", title: "Documentaries", movies: documentaries })
     : setCategoryMovie({ category: "trending", title: "Trending Now", movies: trendingNow }) }
 
+  // For introduction Animation w/ Lottie Animation
+  if(animateStart){
+    return(
+      <div className='flex flex-col items-center justify-center relative h-[100vh] overflow-hidden'>
+        <Lottie style={{width:"40rem" }} animationData={IntroLogo}/>
+        <motion.div
+          initial={{ opacity: 0, y:100 }}
+          animate={{ opacity: 1, y: 0 }}
+          className=" self-start animate-bounce absolute bottom-0 left-4 flex flex-col">
+          <h1 className='font-golos text-gray-800 text-xl '>
+            WELCOME
+          </h1>
+          <h1 className='font-roboto text-gray-800 text-4xl'>
+            LOADING...
+          </h1>
+        </motion.div>
+      </div>
+    )
+  }
+
   return (
     <div className=''>
       <Head>
@@ -51,15 +81,12 @@ const Home = ({ trendingNow, originals, topRated, actionMovies, comedy, horror, 
       </Head>
       <div className='flex flex-col'>
         {bannerMovie ? <Banner  movie={bannerMovie}/>: <Loading />}
-        
-        {/* <CategoryMenu handleSelectMovie={handleSelectMovie} /> */}
 
-        {/* {categoryMovie ? <RowList movies={categoryMovie.movies} title={categoryMovie.title} category={categoryMovie.category} /> : <h1>Loading...</h1>} */}
-
-
-        {categoryMovie ? <MovieList movies={categoryMovie.movies} title={categoryMovie.title} category={categoryMovie.category} handleSelectMovie={handleSelectMovie} /> : <h1>Loading...</h1> }
-
+        {categoryMovie 
+          ? <MovieList movies={categoryMovie.movies} title={categoryMovie.title} category={categoryMovie.category} handleSelectMovie={handleSelectMovie} /> 
+          : <h1>Loading...</h1> }
       </div>
+      <Footer />
     </div>
   )
 }
